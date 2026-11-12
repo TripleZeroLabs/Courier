@@ -1,6 +1,6 @@
 [package]
 name = "courier"
-version = "0.2.1"
+version = "1.0.0"
 description = "Unofficial Windows desktop app for Facebook Messenger (facebook.com/messages). Not affiliated with Meta."
 license = "MIT"
 edition = "2021"
