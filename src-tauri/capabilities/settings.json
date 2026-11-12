@@ -1,0 +1,8 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "settings",
+  "description": "Courier's local Settings window may read and save Courier's own settings. Nothing else, and no other window.",
+  "local": true,
+  "windows": ["settings"],
+  "permissions": ["allow-get-settings", "allow-save-settings"]
+}

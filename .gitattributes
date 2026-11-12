@@ -1,0 +1,10 @@
+# Normalise line endings in the repo (LF), check out natively.
+* text=auto
+
+# PowerShell scripts keep CRLF for Windows PowerShell 5.1.
+*.ps1 text eol=crlf
+
+# Binary assets.
+*.png binary
+*.ico binary
+*.icns binary

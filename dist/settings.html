@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Courier's Settings window. Local page; its only IPC access is
+       get_settings / save_settings (see src-tauri/src/settings.rs). -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src ipc: http://ipc.localhost">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Courier Settings</title>
+  <link rel="stylesheet" href="settings.css">
+  <script src="settings.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <img src="icon.png" alt="" width="36" height="36">
+    <div>
+      <h1>Courier Settings</h1>
+      <p class="muted">Changes apply immediately. <span id="status" role="status"></span></p>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="general">General</button>
+    <button role="tab" aria-selected="false" data-tab="layout">Layout</button>
+    <button role="tab" aria-selected="false" data-tab="appearance">Appearance</button>
+    <button role="tab" aria-selected="false" data-tab="css">Custom CSS</button>
+  </nav>
+
+  <main>
+    <section id="tab-general" role="tabpanel">
+      <h2>General</h2>
+      <label class="row"><span><b>Notifications</b><small>Windows toasts for new messages.</small></span>
+        <input type="checkbox" data-key="notifications"></label>
+      <label class="row"><span><b>Start with Windows</b><small>Starts hidden in the tray.</small></span>
+        <input type="checkbox" id="autostart"></label>
+      <label class="row"><span><b>Esc hides the window</b><small>Off by default: Messenger uses Esc to close its own dialogs.</small></span>
+        <input type="checkbox" data-key="esc_hides_window"></label>
+      <label class="row"><span><b>Global show/hide hotkey</b><small>e.g. Ctrl+Alt+M. Leave empty for none.</small></span>
+        <input type="text" data-key="hotkey" maxlength="64" placeholder="None" spellcheck="false"></label>
+    </section>
+
+    <section id="tab-layout" role="tabpanel" hidden>
+      <h2>Layout</h2>
+      <label class="row"><span><b>Hide Facebook's top bar</b><small>Ctrl+Shift+D toggles it until the next reload.</small></span>
+        <input type="checkbox" data-key="declutter"></label>
+      <label class="row"><span><b>Auto-hide chat list</b><small>Collapses to a strip at the left edge; hover to open. Ctrl+Shift+S.</small></span>
+        <input type="checkbox" id="drawer"></label>
+      <label class="row"><span><b>Zoom</b><small>Ctrl+= / Ctrl+- / Ctrl+0 in the main window.</small></span>
+        <span class="inline"><input type="range" id="zoom" min="50" max="300" step="5"><output id="zoom-out"></output></span></label>
+    </section>
+
+    <section id="tab-appearance" role="tabpanel" hidden>
+      <h2>Appearance</h2>
+      <div class="row"><span><b>Mode</b><small>"Facebook" follows your Facebook display setting.</small></span>
+        <span class="segmented" id="mode"></span></div>
+
+      <h3>Colors <button class="link" id="reset-colors">Reset all</button></h3>
+      <div id="colors" class="grid"></div>
+
+      <h3>Sizes and spacing <button class="link" id="reset-sizes">Reset all</button></h3>
+      <p class="muted small">Facebook exposes these as variables. Spacing that Facebook hard-codes can only be changed with Custom CSS.</p>
+      <div id="sizes"></div>
+    </section>
+
+    <section id="tab-css" role="tabpanel" hidden>
+      <h2>Custom CSS</h2>
+      <p class="muted small">Applied to the Messenger page after everything else. Prefer Facebook's
+        variables (e.g. <code>--surface-background</code>) and attributes like <code>[role="main"]</code>;
+        Facebook's class names change constantly. Saved as you type.</p>
+      <textarea id="custom-css" spellcheck="false" maxlength="20000"
+        placeholder=":root, .__fb-light-mode, .__fb-dark-mode {&#10;  --chat-bubble-border-radius: 6px !important;&#10;}"></textarea>
+      <p class="muted small" id="css-count"></p>
+    </section>
+  </main>
+
+  <footer class="muted small" id="about"></footer>
+</body>
+</html>

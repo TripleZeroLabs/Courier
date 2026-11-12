@@ -1,0 +1,96 @@
+:root {
+  --bg: #f5f6f8;
+  --panel: #ffffff;
+  --text: #1c1e21;
+  --muted: #65676b;
+  --line: #e2e4e8;
+  --accent: #0a6cf0;
+  --accent-text: #ffffff;
+  --hover: rgba(0, 0, 0, 0.05);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18191a;
+    --panel: #242526;
+    --text: #e4e6eb;
+    --muted: #b0b3b8;
+    --line: #3a3b3c;
+    --accent: #2d88ff;
+    --hover: rgba(255, 255, 255, 0.06);
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font: 14px/1.4 "Segoe UI", system-ui, sans-serif; padding: 20px 24px 24px; }
+h1 { font-size: 18px; margin: 0; }
+h2 { font-size: 15px; margin: 0 0 8px; }
+h3 { font-size: 13px; margin: 20px 0 6px; display: flex; align-items: center; gap: 10px;
+     text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+code { font: 12px Consolas, monospace; background: var(--hover); padding: 1px 4px; border-radius: 4px; }
+.muted { color: var(--muted); margin: 2px 0 0; }
+.small { font-size: 12px; }
+
+.top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+#status { margin-left: 6px; }
+#status.error { color: #e0245e; }
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.tabs button {
+  border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600;
+  padding: 8px 12px; border-bottom: 2px solid transparent; cursor: pointer;
+}
+.tabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.tabs button:hover { color: var(--text); }
+
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+
+.row {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 10px 0; border-top: 1px solid var(--line);
+}
+h2 + .row { border-top: 0; }
+.row > span:first-child { display: flex; flex-direction: column; }
+.row small { color: var(--muted); font-size: 12px; }
+.inline { display: flex; align-items: center; gap: 8px; }
+output { min-width: 3.5em; text-align: right; font-variant-numeric: tabular-nums; }
+
+input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+input[type="range"] { accent-color: var(--accent); width: 180px; }
+input[type="text"], textarea {
+  font: inherit; color: var(--text); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px;
+}
+input[type="text"] { width: 180px; }
+input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.segmented button {
+  border: 0; background: none; color: var(--text); font: inherit; padding: 6px 12px; cursor: pointer;
+}
+.segmented button + button { border-left: 1px solid var(--line); }
+.segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 6px 16px; }
+.token { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; }
+.token .name { display: flex; flex-direction: column; }
+.token .controls { display: flex; align-items: center; gap: 6px; }
+.token.unset .value { color: var(--muted); font-style: italic; }
+input[type="color"] {
+  width: 32px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 6px;
+  background: none; cursor: pointer;
+}
+.token.unset input[type="color"] { opacity: 0.45; }
+
+button.link {
+  border: 0; background: none; color: var(--accent); font: inherit; font-size: 12px;
+  cursor: pointer; padding: 2px 4px; text-transform: none; letter-spacing: 0;
+}
+button.link:hover { text-decoration: underline; }
+button.link[disabled] { visibility: hidden; }
+
+textarea { width: 100%; min-height: 360px; font: 12.5px/1.45 Consolas, "Cascadia Mono", monospace; resize: vertical; }
+
+footer { margin-top: 16px; text-align: center; }

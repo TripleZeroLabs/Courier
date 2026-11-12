@@ -1,0 +1,23 @@
+# Dependencies and build output
+node_modules/
+src-tauri/target/
+src-tauri/gen/
+installer/
+
+# Logs and local diagnostics (can contain page details; never commit)
+*.log
+structure-dump*.txt
+config.json
+.window-state.json
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Screenshots (may show conversations)
+*.screenshot.png
+screenshots/

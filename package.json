@@ -1,0 +1,16 @@
+{
+  "name": "courier",
+  "private": true,
+  "version": "0.2.1",
+  "description": "Unofficial Windows desktop app for Facebook Messenger (facebook.com/messages). Not affiliated with Meta.",
+  "license": "MIT",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "postbuild": "node tools/copy-installer.mjs"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

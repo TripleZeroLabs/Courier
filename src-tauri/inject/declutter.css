@@ -1,0 +1,137 @@
+/* =========================================================================
+   Courier declutter stylesheet
+   -------------------------------------------------------------------------
+   Hides Facebook's non-Messenger UI so the window looks like a dedicated
+   Messenger app. Injected into https://*.facebook.com by declutter.js.
+
+   RULES FOR EDITING
+   * Never use Facebook's class names (x1n2onr6, etc.). They are generated
+     and change with every deploy.
+   * Prefer, in order: ARIA roles, data-* attributes, page structure
+     (:has(), child combinators), and only then aria-label text. aria-label
+     depends on your Facebook language, so note the language next to it.
+   * Each block says WHAT it hides and HOW TO RE-FIND it when it breaks
+     (press F12 in a dev build, use the element picker, look for the
+     attribute named below).
+   * Anything that needs text matching or logic goes in declutter.js (RULES).
+     Elements it hides get the data-courier-hidden attribute (see the end).
+
+   Turn everything off without a rebuild: Ctrl+Shift+D, or set
+   "declutter": false in %APPDATA%\dev.personal.courier\config.json.
+   After editing this file, rebuild (or let `tauri dev` restart).
+   ========================================================================= */
+
+
+/* --- 1. Top bar -----------------------------------------------------------
+   WHAT: Facebook logo, search box, Home/Video/Marketplace/Groups tabs, and
+         the Menu/Messenger/Notifications/Account buttons.
+   HOW TO RE-FIND: the top bar's outermost element is the page "banner"
+         landmark: <div role="banner">. */
+div[role="banner"] {
+  display: none !important;
+}
+
+
+/* --- 2. Space reserved for the top bar ------------------------------------
+   WHAT: Facebook offsets the page body by the top bar's height using the
+         --header-height CSS variable (56px). Setting it to 0 lets the chat
+         list and conversation use the full window height.
+   HOW TO RE-FIND: in DevTools, select <body>, look at Computed styles for a
+         custom property holding the header height (search "header"). If it
+         was renamed, change it here. If there is a gap at the top after a
+         Facebook update, this is the rule to check. */
+html, body, body * {
+  --header-height: 0px !important;
+}
+
+
+/* --- 3. Chat list drawer ----------------------------------------------------
+   WHAT: in "drawer" mode (the default; Ctrl+Shift+S or the tray switches to
+         "pinned"), the chat list column slides out of view, leaving a thin
+         strip at the left edge. Hovering the strip slides the list over the
+         conversation; it hides again shortly after the mouse leaves. It stays
+         open while its search box has focus.
+   HOW IT FINDS THE COLUMN: declutter.js (markDrawer) marks the column with
+         data-courier-drawer and its row container with
+         data-courier-drawer-host. It looks for the navigation landmark that
+         contains the chat list grid (<div role="navigation"> containing
+         <div role="grid">) and walks up to the child of the element it shares
+         with the conversation (<div role="main">). If the drawer stops
+         working, check those two roles in DevTools. In narrow windows
+         Facebook shows either the chat list or a conversation; while it
+         shows only the list, no drawer is applied.
+   TUNING: width, strip size and timings are the variables below. */
+html[data-courier-sidebar="drawer"] {
+  --courier-drawer-width: 360px;
+  --courier-drawer-strip: 8px;
+  --courier-drawer-open-delay: 0.08s;  /* avoids opening when the mouse just passes by */
+  --courier-drawer-close-delay: 0.4s;  /* grace period after the mouse leaves */
+}
+
+/* Room for the strip, so it never covers the conversation. */
+html[data-courier-sidebar="drawer"] [data-courier-drawer-host] {
+  padding-left: var(--courier-drawer-strip) !important;
+}
+
+html[data-courier-sidebar="drawer"] [data-courier-drawer] {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: auto !important;
+  left: 0 !important;
+  /* In narrow windows Facebook turns the chat list into an inset card with
+     16px margins and a reduced max-height; margins still move a fixed
+     element, which pushed the strip off the window edge (over the
+     conversation, where hovering didn't open it). Keep it flush. */
+  margin: 0 !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  /* With a conversation open in a narrow window, Facebook hides the chat
+     list (visibility: hidden), which also made the strip invisible and
+     un-hoverable. The drawer decides visibility instead. */
+  visibility: visible !important;
+  z-index: 3 !important;
+  width: var(--courier-drawer-width) !important;
+  max-width: 85vw !important;
+  height: 100vh !important;
+  background: var(--surface-background, #fff);
+  transform: translateX(calc(-100% + var(--courier-drawer-strip)));
+  transition: transform 0.2s ease var(--courier-drawer-close-delay),
+              box-shadow 0.2s ease var(--courier-drawer-close-delay);
+}
+
+html[data-courier-sidebar="drawer"] [data-courier-drawer]:hover,
+html[data-courier-sidebar="drawer"] [data-courier-drawer]:has(input:focus) {
+  transform: none;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25);
+  transition-delay: var(--courier-drawer-open-delay);
+}
+
+/* The strip: a divider line and a small grip, shown while collapsed. */
+html[data-courier-sidebar="drawer"] [data-courier-drawer]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--courier-drawer-strip);
+  height: 100%;
+  border-right: 1px solid var(--divider, rgba(0, 0, 0, 0.1));
+  background-color: var(--surface-background, #fff);
+  background-image: linear-gradient(var(--secondary-icon, #8a8d91), var(--secondary-icon, #8a8d91));
+  background-size: 3px 48px;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.15s ease var(--courier-drawer-close-delay);
+}
+html[data-courier-sidebar="drawer"] [data-courier-drawer]:hover::after,
+html[data-courier-sidebar="drawer"] [data-courier-drawer]:has(input:focus)::after {
+  opacity: 0;
+  transition-delay: var(--courier-drawer-open-delay);
+}
+
+
+/* --- Hidden by declutter.js rules (don't remove) -------------------------- */
+[data-courier-hidden] {
+  display: none !important;
+}
